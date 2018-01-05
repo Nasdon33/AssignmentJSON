@@ -50,7 +50,7 @@ assignments.route('/:assignmentid')
                 res.json(deliveredAssignment[i]);
             }
     })
-    .put(function(req, res) {
+    .post(function(req, res) {
         // Modificare il proprio assignment
         const id = req.params.assignmentid;
         const i = deliveredAssignment.findIndex(item => { return item.assignmentID === id});
