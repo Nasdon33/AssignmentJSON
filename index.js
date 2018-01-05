@@ -10,7 +10,7 @@ const assignments = require('./assignments')
 
 app.use('/assignments', assignments);
 
-app.set('port', (process.env.PORT || 5000));
+app.set('port', (process.env.PORT || 6000));
 
 //listen in a specific port
 app.listen(app.get('port'), function() {

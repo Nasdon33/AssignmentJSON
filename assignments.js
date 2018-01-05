@@ -37,22 +37,22 @@ assignments.route('/')
     });
 
 
-assignments.route('/:assignmentid')
+assignments.route('/:assignmentID')
     .get(function(req, res) {
         // Visualizzare il proprio assignment
-        const id = req.params.assignmentid;
+        const id = req.params.assignmentID;
         const i = deliveredAssignment.findIndex(item => { return item.assignmentID === id});
         if (i==-1)
             res.sendStatus(404);
         else
             {
-                res.sendStatus(200);
-                res.json(deliveredAssignment[i]);
+                //res.statusCode = 200;
+                res.status(200).json(deliveredAssignment[i]);
             }
     })
     .post(function(req, res) {
         // Modificare il proprio assignment
-        const id = req.params.assignmentid;
+        const id = req.params.assignmentID;
         const i = deliveredAssignment.findIndex(item => { return item.assignmentID === id});
         if (i==-1)
             res.sendStatus(404);
@@ -61,13 +61,13 @@ assignments.route('/:assignmentid')
                 deliveredAssignment[i] = req.body;
                 deliveredAssignment[i].assignmentID = id;
                 deliveredAssignment[i].lastModified = new Date();
-                res.sendStatus(200);
-                res.json(deliveredAssignment[i]);
+                //res.statusCode =  200;
+                res.status(200).json(deliveredAssignment[i]);
             }
     })
     .delete(function(req, res) {
         // Cancellare il proprio assignment  
-        const id = req.params.assignmentid;
+        const id = req.params.assignmentID;
         const i = deliveredAssignment.findIndex(item => { return item.assignmentID === id});
         if (i==-1)
             res.sendStatus(404);
@@ -76,7 +76,6 @@ assignments.route('/:assignmentid')
                 const deleted = deliveredAssignment[i];
                 deliveredAssignment.splice(i,1);
                 res.sendStatus(204);
-                res.json(id);
             }
     });
 
