@@ -21,18 +21,18 @@ const postAssignments = function (newAssignment) {
     })
 }
 
-const putAssignments = function (newAssignment) {
+const putAssignments = function (assignment) {
     return fetch(assignmentsRoot+'/assignmentID', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        body: JSON.stringify(newAssignment)
+        body: JSON.stringify(assignment)
     })
 }
 
-const deleteAssignments = function (newAssignment) {
+const deleteAssignments = function (assignmentID) {
     return fetch(assignmentsRoot+'/'+assignmentID, {
         method: 'DELETE',
         headers: {
@@ -42,7 +42,7 @@ const deleteAssignments = function (newAssignment) {
     })
 }
 
-const getOneAssignment = function (newAssignment) {
+const getOneAssignment = function (assignmentID) {
     return fetch(assignmentsRoot+'/'+assignmentID, {
         method: 'GET',
         headers: {
@@ -51,7 +51,7 @@ const getOneAssignment = function (newAssignment) {
     })
 }
 
-const getManyAssignments = function (newAssignment) {
+const getManyAssignments = function () {
     return fetch(assignmentsRoot, {
         method: 'GET',
         headers: {
