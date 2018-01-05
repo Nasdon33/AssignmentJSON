@@ -7,6 +7,29 @@ const exampleAssignment = {
     "assignmentResult": {"url": "google.com"},
     "status": "minim"
 }
+const example3Assignment = {
+    "workerID": "ao90p3",
+    "taskID": "Inserimento dati database",
+    "assignmentResult": {"url": "wikipedia.it"},
+    "status": "minim"
+}
+const example4Assignment = {
+    "workerID": "54eh7y",
+    "taskID": "Raccolta dati bilancia",
+    "assignmentResult": {"color": "red"},
+    "status": "minim"
+}
+
+
+const example2Assignment = {
+    "workerID": "ao90p3",
+    "taskID": "Raccolta dati bilancia",
+    "assignmentResult": {
+        "url": "google.com",
+        "color": "green"    
+    },
+    "status": "minim"
+}
 
 // WIP
 
@@ -21,8 +44,8 @@ const postAssignments = function (newAssignment) {
     })
 }
 
-const putAssignments = function (assignment) {
-    return fetch(assignmentsRoot+'/assignmentID', {
+const putAssignments = function (assignment, assignmentID) {
+    return fetch(assignmentsRoot+'/'+assignmentID, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -74,6 +97,42 @@ test('Aggiungo Assignment e poi lo ricevo', () => {
     .catch(e => {console.log(e)})
 });
 
+test('Modifico Assignment', () => {
+    return putAssignments(example2Assignment, exampleAssignment.assignmentID)
+    .then(postResponse => { return postResponse.json() })
+    .then(postResponseJson => {
+        example2Assignment.assignmentID = postResponseJson.assignmentID;
+        return getOneAssignment(exampleAssignment.assignmentID);
+    })
+    .then(getResponse => { return getResponse.json() })
+    .then(jsonResponse => expect(jsonResponse.assignmentResult).toEqual(example2Assignment.assignmentResult))
+    .catch(e => console.log(e))
+});
+
+
+test('Aggiungo degli Assignment e poi li ricevo tutti', () => {
+    return postAssignments(example3Assignment)
+    .then(postResponse => { return postResponse.json() })
+    .then(postResponseJson => {
+        example3Assignment.assignmentID = postResponseJson.assignmentID;
+        return postAssignments(example4Assignment);
+    }) 
+    .then(postResponse => { return postResponse.json() })
+    .then(postResponseJson => {
+        example4Assignment.assignmentID = postResponseJson.assignmentID;
+        return getManyAssignments();
+    })
+    .then(getResponse => { return getResponse.json() })
+    .then(jsonResponse => { 
+        const array = [example2Assignment, example3Assignment, example4Assignment];
+        expect(array).toEqual(
+            expect.arrayContaining(jsonResponse),
+        )
+    })
+    .catch(e => console.log(e))
+    // Sistemare questo caso di test
+});
+
 test('Cancello assignment esistente', () => {
     return deleteAssignments(exampleAssignment.assignmentID)
     .then (res => expect(res.status).toBe(204))
@@ -84,12 +143,4 @@ test('Cancello assignment inesistente', () => {
     return deleteAssignments(exampleAssignment.assignmentID)
     .then (res => expect(res.status).toBe(404))
     .catch(e => { console.log(e) })
-});
-
-test('Aggiungo Assignment e poi lo modifico', () => {
-    
-});
-
-test('Aggiungo degli Assignment e poi ne ricevo alcuni filtrandoli per Task ID', () => {
-    
 });
