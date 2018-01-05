@@ -76,6 +76,7 @@ assignments.route('/:assignmentid')
                 const deleted = deliveredAssignment[i];
                 deliveredAssignment.splice(i,1);
                 res.sendStatus(204);
+                res.json(id);
             }
     });
 

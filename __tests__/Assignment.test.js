@@ -63,11 +63,27 @@ const getManyAssignments = function () {
 
 
 test('Aggiungo Assignment e poi lo ricevo', () => {
-
+    return postAssignments(exampleAssignment)
+    .then(postResponse => { return postResponse.json() })
+    .then(postResponseJson => {
+        exampleAssignment.assignmentID = postResponseJson.assignmentID;
+        return getOneAssignment(exampleAssignment.assignmentID);
+    })
+    .then(getResponse => { return getResponse.json() })
+    .then(jsonResponse => { expect(jsonResponse.assignmentResult).toEqual(exampleAssignment.assignmentResult)})
+    .catch(e => {console.log(e)})
 });
 
-test('Aggiungo Assignment e poi lo cancello', () => {
-    
+test('Cancello assignment esistente', () => {
+    return deleteAssignments(exampleAssignment.assignmentID)
+    .then (res => expect(res.status).toBe(204))
+    .catch(e => { console.log(e) })
+});
+
+test('Cancello assignment inesistente', () => {
+    return deleteAssignments(exampleAssignment.assignmentID)
+    .then (res => expect(res.status).toBe(404))
+    .catch(e => { console.log(e) })
 });
 
 test('Aggiungo Assignment e poi lo modifico', () => {
