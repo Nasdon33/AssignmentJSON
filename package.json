@@ -5,6 +5,14 @@
   "scripts": {
     "test": "jest"
   },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/index.js",
+      "**/assignments.js"
+    ]
+  },
   "dependencies": {
     "express": "^4.16.2",
     "jest": "^22.0.4",

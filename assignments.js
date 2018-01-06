@@ -25,11 +25,11 @@ assignments.route('/')
     })
     .get(function(req, res){
         //filter
-        const filteredWorkerAssignment = deliveredAssignment;
+        var filteredWorkerAssignment = deliveredAssignment;
         if(req.query.workerID)
             filteredWorkerAssignment = deliveredAssignment.filter(item =>
                                 { return item.workerID === req.query.workerID});
-        const filteredTaskAssignment  = filteredWorkerAssignment;
+        var filteredTaskAssignment  = filteredWorkerAssignment;
         if(req.query.taskID)
             filteredTaskAssignment = filteredWorkerAssignment.filter(item =>
                                     { return item.taskID === req.query.taskID});

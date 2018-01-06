@@ -74,8 +74,8 @@ const getOneAssignment = function (assignmentID) {
     })
 }
 
-const getManyAssignments = function () {
-    return fetch(assignmentsRoot, {
+const getNotSoManyAssignments = function () {
+    return fetch(assignmentsRoot+"?taskID=Raccolta+dati+bilancia&workerID=ao90p3", {
         method: 'GET',
         headers: {
             'Accept': 'application/json'
@@ -83,7 +83,23 @@ const getManyAssignments = function () {
     })
 }
 
+const getManyAssignments = function () {
+    return fetch(assignmentsRoot+"?taskID=Raccolta+dati+bilancia", {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+}
 
+const getAllAssignments = function () {
+    return fetch(assignmentsRoot, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+}
 
 test('Aggiungo Assignment e poi lo ricevo', () => {
     return postAssignments(exampleAssignment)
@@ -120,18 +136,46 @@ test('Aggiungo degli Assignment e poi li ricevo tutti', () => {
     .then(postResponse => { return postResponse.json() })
     .then(postResponseJson => {
         example4Assignment.assignmentID = postResponseJson.assignmentID;
-        return getManyAssignments();
+        return getAllAssignments();
     })
-    .then(getResponse => { return getResponse.json() })
+    .then(getResponse => { return getResponse.json() }) 
     .then(jsonResponse => { 
-        const array = [example2Assignment, example3Assignment, example4Assignment];
-        expect(array).toEqual(
-            expect.arrayContaining(jsonResponse),
-        )
+        /*
+        // Per liberare un array togliere il commento alle linee seguenti
+        i = 0
+        while(i < 10){
+            deleteAssignments(jsonResponse[i].assignmentID)
+            i++
+        }
+        */
+        //console.log(jsonResponse)
+        // Valuti e Cancello gli assignment aggiunti
+        expect(jsonResponse[0].assignmentID).toEqual(exampleAssignment.assignmentID)
+        expect(jsonResponse[1].assignmentID).toEqual(example3Assignment.assignmentID)
+        expect(jsonResponse[2].assignmentID).toEqual(example4Assignment.assignmentID)
     })
     .catch(e => console.log(e))
-    // Sistemare questo caso di test
 });
+
+test('Cerco assignment con task filtrata', () => {
+    return getManyAssignments()
+    .then (getResponse => { return getResponse.json() })
+    .then (jsonResponse => {
+        expect(jsonResponse[0].assignmentID).toEqual(exampleAssignment.assignmentID)
+        expect(jsonResponse[1].assignmentID).toEqual(example4Assignment.assignmentID)
+    })
+})
+
+test('Cerco assignment con doppio filtro e cancello gli ultimi due Assignments', () => {
+    return getNotSoManyAssignments()
+    .then (getResponse => { return getResponse.json() })
+    .then (jsonResponse => {
+        expect(jsonResponse[0].assignmentID).toEqual(exampleAssignment.assignmentID)
+        deleteAssignments(example3Assignment.assignmentID)
+        deleteAssignments(example4Assignment.assignmentID)
+    })
+})
+
 
 test('Cancello assignment esistente', () => {
     return deleteAssignments(exampleAssignment.assignmentID)
